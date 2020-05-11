@@ -2,20 +2,24 @@ class Node {
   constructor(value) {
     this.value = value;
     this.next = null;
+    this.prev = null;
   }
 }
 
-class LinkedList {
+class DoublyLinkedList {
   constructor(value) {
     this.head = {
       value: value,
       next: null,
+      prev: null,
     };
     this.tail = this.head;
     this.length = 1;
   }
+
   append(value) {
     const newNode = new Node(value);
+    newNode.prev = this.tail;
     this.tail.next = newNode;
     this.tail = newNode;
     this.length++;
@@ -25,6 +29,7 @@ class LinkedList {
   prepend(value) {
     const newNode = new Node(value);
     newNode.next = this.head;
+    this.head.prev = newNode;
     this.head = newNode;
     this.length++;
     return this;
@@ -48,9 +53,11 @@ class LinkedList {
 
     const newNode = new Node(value);
     const leader = this.traverseToIndex(index - 1);
-    const holdingPointer = leader.next;
+    const follower = leader.next;
     leader.next = newNode;
-    newNode.next = holdingPointer;
+    newNode.prev = leader;
+    newNode.next = follower;
+    follower.prev = newNode;
     this.length++;
     return this.printList();
   }
@@ -64,24 +71,13 @@ class LinkedList {
     }
     return currentNode;
   }
-
-  remove(index) {
-    // check params
-    const leader = this.traverseToIndex(index - 1);
-    const unwantedNode = leader.next;
-    leader.next = unwantedNode.next;
-    this.length--;
-    return this.printList();
-  }
 }
 
-const myLinkedList = new LinkedList(10);
-myLinkedList.append(7);
-myLinkedList.append(17);
-myLinkedList.append(73);
-myLinkedList.prepend(7);
-myLinkedList.insert(479, 890);
-console.log(myLinkedList.insert(2, 698567));
-console.log(myLinkedList);
-console.log(myLinkedList.printList());
-console.log(myLinkedList.remove(2));
+const doublyLinkedList = new DoublyLinkedList(10);
+doublyLinkedList.append(5);
+doublyLinkedList.append(346);
+doublyLinkedList.append(3241);
+doublyLinkedList.prepend(8);
+// console.log(doublyLinkedList);
+console.log(doublyLinkedList.printList());
+console.log(doublyLinkedList.insert(7, 20));
